@@ -1,17 +1,277 @@
+.
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>aartas loader</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap");
+
+      body {
+        font-family: "Urbanist", sans-serif;
+      }
+
+      .viewport {
+        width: 28%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .image-container {
+        display: flex;
+        transition: transform 5s ease;
+      }
+
+      .letter {
+        width: 100px; /* You can adjust this width to fit your images */
+        height: 100px; /* You can adjust this height to fit your images */
+        opacity: 1;
+        transition: opacity 2s ease;
+      }
+
+      /* main container */
+
+      .container {
+        height: 100vh;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        position: relative;
+      }
+
+      /* logo */
+
+      .logo {
+        display: flex;
+        left: 38%;
+        top: 30%;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+
+      #aartas-image {
+        max-width: 100%;
+        max-height: 100%;
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+        animation: fadeOut 2s ease-in-out forwards;
+      }
+
+      @keyframes fadeOut {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* loader circle */
+
+      .loader {
+        display: none;
+      }
+
+      .loader {
+        height: 270px;
+        width: 270px;
+        background-color: #000;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        position: relative;
+        z-index: 1;
+        margin-right: 10px;
+        animation: fadeIn 2s ease-in forwards;
+      }
+
+      .loader::before {
+        content: "";
+        position: absolute;
+        height: 84%;
+        width: 84%;
+        background-color: #fff;
+        border-radius: 50%;
+      }
+
+      .letter {
+        position: relative;
+        opacity: 0;
+        animation: fadeIn 1.5s ease-in forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* loading text */
+
+      #text {
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: -250px;
+        /* margin-top: 410px; */
+        letter-spacing: 2;
+        animation: fadeIn 2s ease-in forwards;
+      }
+
+      /* responsive */
+
+      @media (max-width: 992px) {
+        .logo {
+          display: flex;
+          left: 5%;
+          top: 30%;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .logo {
+          display: flex;
+          left: 5%;
+          top: 30%;
+        }
+      }
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .logo {
+          left: 5%;
+          top: 30%;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="container">
-      <div class="logo"><div class="loader"></div></div>
-    </div>
+      <div class="loader hidden">
+        <div class="viewport">
+          <div class="image-container">
+            <img src="./img/a.png" alt="a" class="letter" />
+            <img src="./img/a.png" alt="a" class="letter" />
+            <img src="./img/r.png" alt="a" class="letter" />
+            <img src="./img/t.png" alt="a" class="letter" />
+            <img src="./img/a.png" alt="a" class="letter" />
+            <img src="./img/s.png" alt="a" class="letter" />
+          </div>
+        </div>
+      </div>
 
-    <!-- fade out crop images of logo -->
-    <script src="script.js"></script>
+      <h2 loading-text="Loading..." id="text" class="">
+        Loading
+        <span id="dot1">.</span>
+        <span id="dot2">.</span>
+        <span id="dot3">.</span>
+      </h2>
+    </div>
+    <script>
+      // js code for spinner progress bar
+
+      let progressBar = document.querySelector(".loader");
+
+      let logo = document.querySelector(".logo");
+      let letter = document.querySelector(".letter");
+
+      let progressValue = 0;
+      let progressEndValue = 100;
+      let speed = 50;
+
+      let progress = setInterval(() => {
+        progressValue++;
+        progressBar.style.background = `conic-gradient(
+      #2D2D2D ${progressValue * 3.6}deg,
+      #fff ${progressValue * 3.6}deg
+  )`;
+        if (progressValue == progressEndValue) {
+          clearInterval(progress);
+        }
+      }, speed);
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var dots = document.querySelectorAll("#dot1, #dot2, #dot3");
+        var colors = ["#d9d9d9", "black"]; // Alternating colors
+        var intervalTime = 500; // Milliseconds, adjust this to control the speed of color change
+
+        function changeDotColors() {
+          for (var i = 0; i < dots.length; i++) {
+            dots[i].style.color = colors[i % colors.length];
+          }
+        }
+
+        // Call the function immediately to set the initial color
+        changeDotColors();
+
+        // Use setInterval to change the dot colors at regular intervals
+        var interval = setInterval(changeDotColors, intervalTime);
+
+        // Stop the color change when the page finishes loading
+        window.addEventListener("load", function () {
+          clearInterval(interval);
+        });
+      });
+
+      // logo image to show image on top
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const aartasImage = document.getElementById("aartas-image");
+        const content = document.querySelector(".content");
+
+        setTimeout(function () {
+          // Show the other content
+          content.style.display = "block";
+        }, 1500);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const images = document.querySelectorAll(".logo_slider img");
+        const fadeDuration = 2000; // Duration of fade transition in milliseconds
+
+        function fadeImages(index) {
+          if (index < images.length) {
+            images[index].style.opacity = "1";
+            setTimeout(() => {
+              images[index].style.opacity = "0";
+              fadeImages(index + 1);
+            }, fadeDuration);
+          }
+        }
+
+        // Start the fading animation when the page loads
+        fadeImages(0);
+      });
+
+      // view port size
+
+      // Function to set the initial viewport width to 160%
+      function setInitialViewportWidth() {
+        document.querySelector(".viewport").style.width = "160%";
+      }
+
+      // Function to change the viewport width to 28% after a 2-second delay
+      function setViewportWidthAfterDelay() {
+        setTimeout(function () {
+          document.querySelector(".viewport").style.width = "28%";
+        }, 1500);
+      }
+
+      // Call the functions on DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", function () {
+        setInitialViewportWidth();
+        setViewportWidthAfterDelay();
+      });
+    </script>
   </body>
 </html>
